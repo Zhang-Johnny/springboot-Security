@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sang.mapper.XhxRiskOrderMapper" >
+  <resultMap id="BaseResultMap" type="org.sang.bean.XhxRiskOrder" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="userId" property="userId" jdbcType="BIGINT" />
+    <result column="riskId" property="riskId" jdbcType="BIGINT" />
+    <result column="companyId" property="companyId" jdbcType="BIGINT" />
+    <result column="orderId" property="orderId" jdbcType="BIGINT" />
+    <result column="companyName" property="companyName" jdbcType="VARCHAR" />
+    <result column="roType" property="roType" jdbcType="INTEGER" />
+<!--    <result column="receiveMode" property="receiveMode" jdbcType="INTEGER" />
+    <result column="mails" property="mails" jdbcType="VARCHAR" />
+    <result column="sendCycle" property="sendCycle" jdbcType="INTEGER" />-->
+    <result column="startTime" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="endTime" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="lazyLoadUser" type="org.sang.bean.XhxRiskOrder" extends="BaseResultMap">
+    <collection property="xhxUser" ofType="org.sang.bean.XhxUser" select="org.sang.mapper.XhxUserMapper.selectByPrimaryKey"
+                column="id">
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, riskId, companyId, orderId, companyName, roType,
+     startTime, endTime, createTime, updateTime
+  </sql>
+  <select id="count" resultType="int">
+    select count(*) from xhx_risk_order
+    <where>
+      <if test="id!=NULL and id != ''">
+        userId in (${id})
+      </if>
+    </where>
+  </select>
+  <select id="findAll" resultMap="lazyLoadUser">
+    select * from xhx_risk_order
+    <where>
+      <if test="id!=NULL and id != ''">
+        and userId in (${id})
+      </if>
+    </where>
+    limit #{page},#{pageSize}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from xhx_risk_order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from xhx_risk_order
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.sang.bean.XhxRiskOrder" >
+    insert into xhx_risk_order (id, userId, riskId, 
+      companyId, orderId, companyName, 
+      roType,
+       startTime, endTime,
+      createTime, updateTime)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{riskId,jdbcType=BIGINT}, 
+      #{companyId,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{companyName,jdbcType=VARCHAR}, 
+      #{roType,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="org.sang.bean.XhxRiskOrder" >
+    insert into xhx_risk_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="riskId != null" >
+        riskId,
+      </if>
+      <if test="companyId != null" >
+        companyId,
+      </if>
+      <if test="orderId != null" >
+        orderId,
+      </if>
+      <if test="companyName != null" >
+        companyName,
+      </if>
+      <if test="roType != null" >
+        roType,
+      </if>
+      <if test="startTime != null" >
+        startTime,
+      </if>
+      <if test="endTime != null" >
+        endTime,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="riskId != null" >
+        #{riskId,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="roType != null" >
+        #{roType,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sang.bean.XhxRiskOrder" >
+    update xhx_risk_order
+    <set >
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="riskId != null" >
+        riskId = #{riskId,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null" >
+        companyId = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="orderId != null" >
+        orderId = #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="companyName != null" >
+        companyName = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="roType != null" >
+        roType = #{roType,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        startTime = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        endTime = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sang.bean.XhxRiskOrder" >
+    update xhx_risk_order
+    set userId = #{userId,jdbcType=BIGINT},
+      riskId = #{riskId,jdbcType=BIGINT},
+      companyId = #{companyId,jdbcType=BIGINT},
+      orderId = #{orderId,jdbcType=BIGINT},
+      companyName = #{companyName,jdbcType=VARCHAR},
+      roType = #{roType,jdbcType=INTEGER},
+      startTime = #{startTime,jdbcType=TIMESTAMP},
+      endTime = #{endTime,jdbcType=TIMESTAMP},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="countByUserId" resultType="java.lang.Integer">
+    select count(*) from xhx_risk_order
+    where userId = #{userId}
+  </select>
+
+  <select id="findRiskOrderByUserId" resultType="org.sang.bean.XhxRiskOrder">
+    select
+    xro.*,xrm.menuName
+    from xhx_risk_order xro inner join xhx_risk_monitor xrm
+    on xro.riskId=xrm.id
+    <where>
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=BIGINT}
+      </if>
+    <if test="menuName != null" >
+      and menuName = #{menuName,jdbcType=VARCHAR}
+    </if>
+    <if test="companyName != null" >
+      and companyName = #{companyName,jdbcType=VARCHAR}
+    </if>
+    <if test="roType != null" >
+      and roType = #{roType,jdbcType=INTEGER}
+    </if>
+      <if test="startTime!=null and startTime!=''">
+        <![CDATA[   and DATE_FORMAT(xro.startTime, '%Y-%m-%d')>= DATE_FORMAT(#{startTime}, '%Y-%m-%d')   ]]>
+      </if>
+      <if test="endTime!=null and endTime!=''">
+        <![CDATA[  and DATE_FORMAT(xro.startTime, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')    ]]>
+      </if>
+    </where>
+    limit #{page},#{pageSize}
+  </select>
+</mapper>

@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sang.mapper.XhxUserinfoMapper" >
+  <resultMap id="BaseResultMap" type="org.sang.bean.XhxUserinfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="userId" property="userId" jdbcType="BIGINT" />
+    <result column="parentId" property="parentId" jdbcType="BIGINT" />
+    <result column="userType" property="userType" jdbcType="INTEGER" />
+    <result column="nameZh" property="nameZh" jdbcType="VARCHAR" />
+    <result column="nameEn" property="nameEn" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="mobilePhone" property="mobilePhone" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="birthDay" property="birthDay" jdbcType="DATE" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="department" property="department" jdbcType="VARCHAR" />
+    <result column="companyid" property="companyid" jdbcType="VARCHAR" />
+    <result column="occupation" property="occupation" jdbcType="VARCHAR" />
+    <result column="position" property="position" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, parentId, userType, nameZh, nameEn, telephone, mobilePhone, address,
+    birthDay, sex, company, department, companyid, occupation, position,email, createTime,
+    updateTime
+  </sql>
+  <select id="findByUserId" resultType="org.sang.bean.XhxUserinfo">
+    select * from xhx_userinfo where userId = #{userId}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from xhx_userinfo
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from xhx_userinfo
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.sang.bean.XhxUserinfo" >
+    insert into xhx_userinfo (id, userId, parentId,
+      userType, nameZh, nameEn, 
+      telephone, mobilePhone, address, 
+      birthDay, sex, company, 
+      department, companyid, occupation, 
+      position,email, createTime, updateTime
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT},
+      #{userType,jdbcType=INTEGER}, #{nameZh,jdbcType=VARCHAR}, #{nameEn,jdbcType=VARCHAR}, 
+      #{telephone,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{birthDay,jdbcType=DATE}, #{sex,jdbcType=INTEGER}, #{company,jdbcType=VARCHAR}, 
+      #{department,jdbcType=VARCHAR}, #{companyid,jdbcType=VARCHAR}, #{occupation,jdbcType=VARCHAR}, 
+      #{position,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.sang.bean.XhxUserinfo" >
+    insert into xhx_userinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="parentId != null" >
+        parentId,
+      </if>
+      <if test="userType != null" >
+        userType,
+      </if>
+      <if test="nameZh != null" >
+        nameZh,
+      </if>
+      <if test="nameEn != null" >
+        nameEn,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="mobilePhone != null" >
+        mobilePhone,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="birthDay != null" >
+        birthDay,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="companyid != null" >
+        companyid,
+      </if>
+      <if test="occupation != null" >
+        occupation,
+      </if>
+      <if test="position != null" >
+        position,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="nameZh != null" >
+        #{nameZh,jdbcType=VARCHAR},
+      </if>
+      <if test="nameEn != null" >
+        #{nameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePhone != null" >
+        #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="birthDay != null" >
+        #{birthDay,jdbcType=DATE},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=VARCHAR},
+      </if>
+      <if test="occupation != null" >
+        #{occupation,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sang.bean.XhxUserinfo" >
+    update xhx_userinfo
+    <set >
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="parentId != null" >
+        parentId = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="userType != null" >
+        userType = #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="nameZh != null" >
+        nameZh = #{nameZh,jdbcType=VARCHAR},
+      </if>
+      <if test="nameEn != null" >
+        nameEn = #{nameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePhone != null" >
+        mobilePhone = #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="birthDay != null" >
+        birthDay = #{birthDay,jdbcType=DATE},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="companyid != null" >
+        companyid = #{companyid,jdbcType=VARCHAR},
+      </if>
+      <if test="occupation != null" >
+        occupation = #{occupation,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sang.bean.XhxUserinfo" >
+    update xhx_userinfo
+    set userId = #{userId,jdbcType=BIGINT},
+      parentId = #{parentId,jdbcType=BIGINT},
+      userType = #{userType,jdbcType=INTEGER},
+      nameZh = #{nameZh,jdbcType=VARCHAR},
+      nameEn = #{nameEn,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      mobilePhone = #{mobilePhone,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      birthDay = #{birthDay,jdbcType=DATE},
+      sex = #{sex,jdbcType=INTEGER},
+      company = #{company,jdbcType=VARCHAR},
+      department = #{department,jdbcType=VARCHAR},
+      companyid = #{companyid,jdbcType=VARCHAR},
+      occupation = #{occupation,jdbcType=VARCHAR},
+      position = #{position,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByUserId" parameterType="org.sang.bean.XhxUserinfo" >
+    update xhx_userinfo
+    <set >
+      <if test="parentId != null" >
+        parentId = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="userType != null" >
+        userType = #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="nameZh != null" >
+        nameZh = #{nameZh,jdbcType=VARCHAR},
+      </if>
+      <if test="nameEn != null" >
+        nameEn = #{nameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePhone != null" >
+        mobilePhone = #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="birthDay != null" >
+        birthDay = #{birthDay,jdbcType=DATE},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="companyid != null" >
+        companyid = #{companyid,jdbcType=VARCHAR},
+      </if>
+      <if test="occupation != null" >
+        occupation = #{occupation,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null" >
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where userId = #{userId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByUserid" resultType="java.lang.String">
+    select email from xhx_userinfo where userId = #{userId}
+  </select>
+</mapper>

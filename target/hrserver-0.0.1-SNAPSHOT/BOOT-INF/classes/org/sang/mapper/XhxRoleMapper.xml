@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sang.mapper.XhxRoleMapper" >
+  <resultMap id="BaseResultMap" type="org.sang.bean.XhxRole" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="nameZh" property="nameZh" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="isEnable" property="isEnable" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, nameZh, sort, isEnable, createTime, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from xhx_role
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from xhx_role
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.sang.bean.XhxRole" >
+    insert into xhx_role (id, name, nameZh, 
+      sort, isEnable, createTime, 
+      updateTime)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{nameZh,jdbcType=VARCHAR}, 
+      #{sort,jdbcType=INTEGER}, #{isEnable,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="org.sang.bean.XhxRole" >
+    insert into xhx_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="nameZh != null" >
+        nameZh,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="isEnable != null" >
+        isEnable,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nameZh != null" >
+        #{nameZh,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="isEnable != null" >
+        #{isEnable,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sang.bean.XhxRole" >
+    update xhx_role
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nameZh != null" >
+        nameZh = #{nameZh,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="isEnable != null" >
+        isEnable = #{isEnable,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sang.bean.XhxRole" >
+    update xhx_role
+    set name = #{name,jdbcType=VARCHAR},
+      nameZh = #{nameZh,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      isEnable = #{isEnable,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <delete id="deleteRoleById" parameterType="java.lang.Integer" >
+    delete from xhx_role
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <select id="roles" resultMap="BaseResultMap">
+    select  * from xhx_role
+  </select>
+
+  <insert id="addNewRole" parameterType="java.util.Map">
+      insert  into  xhx_role (name,nameZh) values ( #{name,jdbcType=VARCHAR}, #{nameZh,jdbcType=VARCHAR})
+  </insert>
+  <select id="selectByName" resultMap="BaseResultMap">
+    select * from xhx_role
+    where name = #{name};
+  </select>
+
+  <select id="selectByRoleId" resultType="java.util.List" >
+    select
+    nameZh
+    from xhx_role
+    where id in (${roleidliststr})
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from xhx_role
+  </select>
+
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select
+    <include refid="Base_Column_List" />
+    from xhx_role
+    where id in
+    (select roleId from xhx_re_user_role where userId = #{userId})
+    <!--<foreach collection="roleIds" item="id" index="index" open="(" separator="," close=")">
+      #{id}
+    </foreach>-->
+  </select>
+  <select id="count" resultType="java.lang.Integer">
+    select count(*) from xhx_role
+  </select>
+  <select id="selectRoleAll" resultType="org.sang.bean.XhxRole">
+    select <include refid="Base_Column_List" />
+    from xhx_role
+    limit #{page},#{pageSize}
+  </select>
+</mapper>

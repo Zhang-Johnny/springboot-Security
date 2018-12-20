@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.sang.mapper.XhxMenuMapper">
+    <resultMap id="BaseResultMap" type="org.sang.bean.XhxMenu">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="path" property="path" jdbcType="VARCHAR"/>
+        <result column="component" property="component" javaType="java.lang.Object"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="iconCls" property="iconCls" jdbcType="VARCHAR"/>
+        <result column="keepAlive" property="keepAlive" jdbcType="BIT"/>
+        <result column="parentId" property="parentId" jdbcType="INTEGER"/>
+        <association property="meta" javaType="org.sang.bean.MenuMeta">
+            <result column="keepAlive" property="keepAlive"/>
+            <result column="requireAuth" property="requireAuth"/>
+        </association>
+        <collection property="roles" ofType="org.sang.bean.XhxRole">
+            <id column="rid" property="id"/>
+            <result column="rname" property="name"/>
+            <result column="rnamezh" property="nameZh"/>
+        </collection>
+        <collection property="children" ofType="org.sang.bean.XhxMenu">
+            <id column="id2" property="id"/>
+            <result column="path2" property="path" jdbcType="VARCHAR"/>
+            <result column="component2" property="component" jdbcType="VARCHAR"/>
+            <result column="name2" property="name" jdbcType="VARCHAR"/>
+            <result column="iconCls2" property="iconCls" jdbcType="VARCHAR"/>
+            <association property="meta" javaType="org.sang.bean.MenuMeta">
+                <result column="keepAlive2" property="keepAlive"/>
+                <result column="requireAuth2" property="requireAuth"/>
+            </association>
+            <collection property="children" ofType="org.sang.bean.XhxMenu">
+                <id column="id3" property="id"/>
+                <result column="name3" property="name" jdbcType="VARCHAR"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, url, path, component, name, iconCls, keepAlive, requireAuth, parentId, enabled,
+        createTime, updateTime
+    </sql>
+    <select id="getAllMenu" resultMap="BaseResultMap">
+        select m.*,r.`id` as rid,r.`name` as rname,r.`nameZh` as rnamezh from xhx_menu m left join xhx_re_role_menu mr on m.`id`=mr.`mId` left join xhx_role r on mr.`roleId`=r.`id` WHERE m.`enabled`=true order by m.`id` desc
+    </select>
+    <select id="getMenusByUserId" parameterType="Long" resultMap="BaseResultMap">
+        select m1.`id`,m1.`path`,m1.`component`,m1.`iconCls`,m1.`name`,m1.`requireAuth`,m2.`component` as component2,m2.`iconCls` as iconCls2,m2.`keepAlive` as keepAlive2,m2.`name` as name2,m2.`path` as path2,m2.`requireAuth` as requireAuth2 from xhx_menu m1,xhx_menu m2 where m1.`id`=m2.`parentId` and m1.`id`!=1 and m2.`id` in(select mr.`mId` from xhx_re_user_role h_r,xhx_re_role_menu mr where h_r.`roleId`=mr.`roleId` and h_r.`userId`=#{hrId}) and m2.`enabled`=true order by m1.`id`,m2.`id`
+    </select>
+    <select id="menuTree" resultMap="BaseResultMap">
+            select m1.`id`,m1.`name`,m2.`id` as id2,m2.`name` as name2,m3.`id` as id3,m3.`name` as name3 from xhx_menu m1,xhx_menu m2,xhx_menu m3 where m1.`id`=m2.`parentId` and m2.`id`=m3.`parentId` and m3.`enabled`=true
+        </select>
+    <select id="getMenusByRid" resultType="Long">
+        SELECT mid from menu_role WHERE rid=#{rid}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+        delete from xhx_menu
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="org.sang.bean.XhxMenu" >
+        insert into xhx_menu (id, url, path,
+        component, name, iconCls,
+        keepAlive, requireAuth, parentId,
+        enabled, createTime, updateTime
+        )
+        values (#{id,jdbcType=BIGINT}, #{url,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR},
+        #{component,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{iconCls,jdbcType=VARCHAR},
+        #{keepAlive,jdbcType=BIT}, #{requireAuth,jdbcType=BIT}, #{parentId,jdbcType=BIGINT},
+        #{enabled,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="org.sang.bean.XhxMenu" >
+        insert into xhx_menu
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="url != null" >
+                url,
+            </if>
+            <if test="path != null" >
+                path,
+            </if>
+            <if test="component != null" >
+                component,
+            </if>
+            <if test="name != null" >
+                name,
+            </if>
+            <if test="iconCls != null" >
+                iconCls,
+            </if>
+            <if test="keepAlive != null" >
+                keepAlive,
+            </if>
+            <if test="requireAuth != null" >
+                requireAuth,
+            </if>
+            <if test="parentId != null" >
+                parentId,
+            </if>
+            <if test="enabled != null" >
+                enabled,
+            </if>
+            <if test="createTime != null" >
+                createTime,
+            </if>
+            <if test="updateTime != null" >
+                updateTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="url != null" >
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="path != null" >
+                #{path,jdbcType=VARCHAR},
+            </if>
+            <if test="component != null" >
+                #{component,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="iconCls != null" >
+                #{iconCls,jdbcType=VARCHAR},
+            </if>
+            <if test="keepAlive != null" >
+                #{keepAlive,jdbcType=BIT},
+            </if>
+            <if test="requireAuth != null" >
+                #{requireAuth,jdbcType=BIT},
+            </if>
+            <if test="parentId != null" >
+                #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="enabled != null" >
+                #{enabled,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="org.sang.bean.XhxMenu" >
+        update xhx_menu
+        <set >
+            <if test="url != null" >
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="path != null" >
+                path = #{path,jdbcType=VARCHAR},
+            </if>
+            <if test="component != null" >
+                component = #{component,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="iconCls != null" >
+                iconCls = #{iconCls,jdbcType=VARCHAR},
+            </if>
+            <if test="keepAlive != null" >
+                keepAlive = #{keepAlive,jdbcType=BIT},
+            </if>
+            <if test="requireAuth != null" >
+                requireAuth = #{requireAuth,jdbcType=BIT},
+            </if>
+            <if test="parentId != null" >
+                parentId = #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="enabled != null" >
+                enabled = #{enabled,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null" >
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                updateTime = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="org.sang.bean.XhxMenu" >
+        update xhx_menu
+        set url = #{url,jdbcType=VARCHAR},
+        path = #{path,jdbcType=VARCHAR},
+        component = #{component,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
+        iconCls = #{iconCls,jdbcType=VARCHAR},
+        keepAlive = #{keepAlive,jdbcType=BIT},
+        requireAuth = #{requireAuth,jdbcType=BIT},
+        parentId = #{parentId,jdbcType=BIGINT},
+        enabled = #{enabled,jdbcType=INTEGER},
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+        updateTime = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="selectAllMenu" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from xhx_menu
+    </select>
+</mapper>

@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sang.mapper.XhxUserMapper" >
+  <resultMap id="BaseResultMap" type="org.sang.bean.XhxUser" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="parentId" property="parentId" jdbcType="BIGINT" />
+    <result column="userType" property="userType" jdbcType="INTEGER" />
+    <result column="bindMobile" property="bindMobile" jdbcType="VARCHAR" />
+    <result column="lastLoginIp" property="lastLoginIp" jdbcType="VARCHAR" />
+    <result column="lastLoginTime" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="loginCount" property="loginCount" jdbcType="INTEGER" />
+    <result column="profilePicture" property="profilePicture" jdbcType="VARCHAR" />
+    <result column="enabled" property="enabled" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="lazyLoadRoles" type="org.sang.bean.XhxUser" extends="BaseResultMap">
+    <collection property="roles" ofType="org.sang.bean.XhxRole" select="org.sang.mapper.XhxUserMapper.getRolesByUserId"
+                column="id"></collection>
+  </resultMap>
+  <resultMap id="eagerLoadRoles" type="org.sang.bean.XhxUser" extends="BaseResultMap">
+    <collection property="roles" ofType="org.sang.bean.XhxRole">
+      <id property="id" column="rid"/>
+      <result property="name" column="rname"/>
+      <result property="nameZh" column="rnamezh"/>
+    </collection>
+  </resultMap>
+ <sql id="Base_Column_List" >
+    id, username, password, parentId, userType, bindMobile, lastLoginIp, lastLoginTime, 
+    loginCount, profilePicture, enabled, createTime, updateTime
+  </sql>
+  <select id="count" resultType="int">
+    select count(*) from xhx_user
+    <where>
+      1 = 1
+      <if test="groupId!=NULL and groupId != ''">
+        and parentId = #{groupId}
+      </if>
+      <if test="userType!=NULL and userType != ''">
+        and userType = #{userType}
+      </if>
+      <if test="username!=NULL and username != ''">
+        and username like "%"#{username}"%"
+      </if>
+    </where>
+  </select>
+  <select id="findAll" resultType="org.sang.bean.XhxUser">
+    select * from xhx_user
+    <where>
+      1 = 1
+      <if test="groupId!=NULL and groupId != ''">
+      and parentId = #{groupId}
+      </if>
+      <if test="userType!=NULL and userType != ''">
+        and userType = #{userType}
+      </if>
+      <if test="username!=NULL and username != ''">
+        and username like "%"#{username}"%"
+      </if>
+    </where>
+    limit #{page},#{pageSize}
+  </select>
+  <select id="QueryByUsername" resultMap="lazyLoadRoles">
+    select * from xhx_user WHERE username=#{username};
+  </select>
+  <select id="getRolesByUserId" resultType="org.sang.bean.XhxRole">
+    SELECT r.* FROM xhx_re_user_role h,xhx_role r where h.roleId=r.id AND h.userId=#{id}
+  </select>
+  <select id="findByName" resultType="org.sang.bean.XhxUser">
+    select * from xhx_user where username like "%"#{username}"%"
+  </select>
+ <select id="getAllUser" resultType="org.sang.bean.XhxUser">
+    select * from XhxUser
+    <if test="currentId!=null">
+      WHERE id !=#{currentId}
+    </if>
+  </select>
+  <insert id="UserReg">
+    INSERT INTO xhx_user set username=#{username},password=#{password}
+  </insert>
+  <select id="getUsersByKeywords" resultMap="eagerLoadRoles">
+    SELECT
+    h.*,
+    `r`.`id` AS `rid`,
+    `r`.`name` AS `rname`,
+    `r`.`nameZh` AS `rnameZh`
+    FROM
+    (
+    ( `xhx_user` `h` LEFT JOIN `xhx_re_user_role` `h_r` ON ( ( `h`.`id` = `h_r`.`userId` ) ) )
+    LEFT JOIN `xhx_role` `r` ON ( ( `h_r`.`roleId` = `r`.`id` ) )
+    )
+    WHERE
+    h.`id` NOT IN ( SELECT h_r.`userId` FROM xhx_re_user_role h_r, xhx_role r WHERE h_r.`roleId` = r.`id` AND r.`nameZh` = '系统管理员' )
+    <if test="keywords!='all' and keywords!=''">
+      and h.`username` like concat('%',#{keywords},'%')
+    </if>
+    order by h.`id` limit 10
+  </select>
+  <select id="getUserById" resultMap="eagerLoadRoles">
+    select h.*,`r`.`id` AS `rid`,`r`.`name` AS `rname`,`r`.`nameZh` AS `rnameZh` from ((`xhx_user` `h` left join `xhx_re_user_role`
+    `h_r` on ((`h`.`id` = `h_r`.`userId`))) left join `xhx_role` `r` on ((`h_r`.`roleId` = `r`.`id`))) where h.`id`=#{hrId}
+  </select>
+
+  <delete id="deleteRoleByUserId" parameterType="Long">
+    DELETE FROM xhx_re_user_role where userId=#{hrId}
+  </delete>
+  <insert id="addRolesForUser">
+    INSERT INTO xhx_re_user_role(userId,roleId) VALUES
+    <foreach collection="rids" separator="," item="rid">
+      (#{hrId},#{rid})
+    </foreach>
+  </insert>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from xhx_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteUser" parameterType="java.lang.Long" >
+    delete from xhx_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.sang.bean.XhxUser" >
+    insert into xhx_user (id, username, password, 
+      parentId, userType, bindMobile, 
+      lastLoginIp, lastLoginTime, loginCount, 
+      profilePicture, enabled, createTime, 
+      updateTime)
+    values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=BIGINT}, #{userType,jdbcType=INTEGER}, #{bindMobile,jdbcType=VARCHAR}, 
+      #{lastLoginIp,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{loginCount,jdbcType=INTEGER}, 
+      #{profilePicture,jdbcType=VARCHAR}, #{enabled,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="org.sang.bean.XhxUser" >
+    insert into xhx_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="parentId != null" >
+        parentId,
+      </if>
+      <if test="userType != null" >
+        userType,
+      </if>
+      <if test="bindMobile != null" >
+        bindMobile,
+      </if>
+      <if test="lastLoginIp != null" >
+        lastLoginIp,
+      </if>
+      <if test="lastLoginTime != null" >
+        lastLoginTime,
+      </if>
+      <if test="loginCount != null" >
+        loginCount,
+      </if>
+      <if test="profilePicture != null" >
+        profilePicture,
+      </if>
+      <if test="enabled != null" >
+        enabled,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="bindMobile != null" >
+        #{bindMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginIp != null" >
+        #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null" >
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginCount != null" >
+        #{loginCount,jdbcType=INTEGER},
+      </if>
+      <if test="profilePicture != null" >
+        #{profilePicture,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null" >
+        #{enabled,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sang.bean.XhxUser" >
+    update xhx_user
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        parentId = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="userType != null" >
+        userType = #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="bindMobile != null" >
+        bindMobile = #{bindMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginIp != null" >
+        lastLoginIp = #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null" >
+        lastLoginTime = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginCount != null" >
+        loginCount = #{loginCount,jdbcType=INTEGER},
+      </if>
+      <if test="profilePicture != null" >
+        profilePicture = #{profilePicture,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null" >
+        enabled = #{enabled,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sang.bean.XhxUser" >
+    update xhx_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      parentId = #{parentId,jdbcType=BIGINT},
+      userType = #{userType,jdbcType=INTEGER},
+      bindMobile = #{bindMobile,jdbcType=VARCHAR},
+      lastLoginIp = #{lastLoginIp,jdbcType=VARCHAR},
+      lastLoginTime = #{lastLoginTime,jdbcType=TIMESTAMP},
+      loginCount = #{loginCount,jdbcType=INTEGER},
+      profilePicture = #{profilePicture,jdbcType=VARCHAR},
+      enabled = #{enabled,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="checkPhone" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(*) from xhx_user where bindMobile = #{bindMobile}
+  </select>
+
+  <select id="checkUsername" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(*) from xhx_user where username = #{username}
+  </select>
+
+  <select id="checkMobile" resultType="int">
+    select count(*) from xhx_user
+    where 1=1
+    <if test="id != NULL">
+      and id = #{id}
+    </if>
+    <if test="username != NULL">
+      and username = #{username}
+    </if>
+    <if test="bindMobile != NULL">
+      and bindMobile = #{bindMobile}
+    </if>
+  </select>
+
+  <update id="updatePassword" parameterType="org.sang.bean.XhxUser" >
+    update xhx_user
+    <set >
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="bindMobile != null" >
+        bindMobile = #{bindMobile,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where username = #{username}
+  </update>
+  <select id="selectByParentId" resultType="java.lang.Long" parameterType="java.lang.Long" >
+    select
+    *
+    from xhx_user
+    where parentId = #{parentId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectUserIdByUserName" resultType="java.lang.Integer">
+    select id from xhx_user where username like "%"#{username}"%"
+  </select>
+
+  <select id="findUserAndRole" resultType="list">
+    SELECT * FROM xhx_user a,xhx_re_user_role b,xhx_role c
+    <where>
+      a.id = b.userId and b.roleId = c.id
+      <if test="groupId!=NULL and groupId != ''">
+        and a.parentId = #{groupId}
+      </if>
+      <if test="userType!=NULL and userType != ''">
+        and a.userType = #{userType}
+      </if>
+      <if test="username!=NULL and username != ''">
+        and a.username like "%"#{username}"%"
+      </if>
+    </where>
+    limit #{page},#{pageSize}
+  </select>
+  
+  <select id="findUserAndRoleCount" resultType="int">
+    SELECT count(a.id) FROM xhx_user a,xhx_re_user_role b,xhx_role c
+    <where>
+      a.id = b.userId and b.roleId = c.id
+      <if test="groupId!=NULL and groupId != ''">
+        and a.parentId = #{groupId}
+      </if>
+      <if test="userType!=NULL and userType != ''">
+        and a.userType = #{userType}
+      </if>
+      <if test="username!=NULL and username != ''">
+        and a.username like "%"#{username}"%"
+      </if>
+    </where>
+  </select>
+<!--多表关联查询NameZh-->
+  <select id="selectNameZhByParentId" resultType="int">
+    SELECT count(a.id) FROM xhx_user a,xhx_re_user_role b,xhx_role c
+    <where>
+      a.id = b.userId and b.roleId = c.id
+      <if test="groupId!=NULL and groupId != ''">
+        and a.parentId = #{groupId}
+      </if>
+      <if test="userType!=NULL and userType != ''">
+        and a.userType = #{userType}
+      </if>
+      <if test="username!=NULL and username != ''">
+        and a.username like "%"#{username}"%"
+      </if>
+    </where>
+  </select>
+<!--联合查询出parentid下的所有子账户的角色-->
+  <select id="selectRolesByParentId" resultMap="userAndRoles">
+		SELECT
+		u.id uid,u.username,r.id rid,r.name,r.nameZh,r.isEnable
+		FROM
+		xhx_user u  inner join xhx_re_user_role ur
+		ON  u.id = ur.userId
+		inner join xhx_role r
+		on ur.roleId=r.id
+		WHERE u.parentId = #{groupId}
+        <if test="username!=NULL and username != ''">
+          and username like "%"#{username}"%"
+        </if>
+		limit #{page},#{pageSize}
+	</select>
+  <resultMap type="org.sang.bean.XhxUser" id="userAndRoles">
+    <id column="uid" property="id"/>
+    <result column="username" property="username"/>
+    <collection property="roles" javaType="list" ofType="org.sang.bean.XhxRole">
+      <id column="rid" property="id"/>
+      <result column="name" property="name"/>
+      <result column="nameZh" property="nameZh"/>
+      <result column="isEnable" property="isEnable"/>
+    </collection>
+  </resultMap>
+</mapper>

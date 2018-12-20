@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sang.mapper.XhxDeliveryMailingAddressMapper" >
+  <resultMap id="BaseResultMap" type="org.sang.bean.XhxDeliveryMailingAddress" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="userId" property="userId" jdbcType="BIGINT" />
+    <result column="personName" property="personName" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="detailedAdd" property="detailedAdd" jdbcType="VARCHAR" />
+    <result column="zipCode" property="zipCode" jdbcType="VARCHAR" />
+      <result column="iphone" property="iphone" jdbcType="VARCHAR" />
+      <result column="defaultStatus" property="defaultStatus" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, personName, area, detailedAdd, zipCode,iphone,defaultStatus,createTime, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from xhx_delivery_mailing_address
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from xhx_delivery_mailing_address
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.sang.bean.XhxDeliveryMailingAddress" >
+    insert into xhx_delivery_mailing_address (id, userId, personName, area, detailedAdd, zipCode,iphone,defaultStatus,createTime, updateTime)
+    values (#{id,jdbcType=BIGINT},#{userId,jdbcType=BIGINT}, #{personName,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR},
+      #{detailedAdd,jdbcType=VARCHAR}, #{zipCode,jdbcType=VARCHAR},#{iphone,jdbcType=VARCHAR}, #{defaultStatus,jdbcType=INTEGER},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="org.sang.bean.XhxDeliveryMailingAddress" >
+    insert into xhx_delivery_mailing_address
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+        <if test="userId != null" >
+            userId,
+        </if>
+      <if test="personName != null" >
+          personName,
+      </if>
+      <if test="area != null" >
+          area,
+      </if>
+      <if test="detailedAdd != null" >
+          detailedAdd,
+      </if>
+      <if test="zipCode != null" >
+          zipCode,
+      </if>
+      <if test="iphone != null" >
+          iphone,
+      </if>
+        <if test="defaultStatus != null" >
+            defaultStatus,
+        </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+        <if test="userId != null" >
+            #{userId,jdbcType=BIGINT},
+        </if>
+      <if test="personName != null" >
+        #{personName,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="detailedAdd != null" >
+        #{detailedAdd,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null" >
+        #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="iphone != null" >
+        #{iphone,jdbcType=VARCHAR},
+      </if>
+        <if test="defaultStatus != null" >
+            #{defaultStatus,jdbcType=INTEGER},
+        </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sang.bean.XhxDeliveryMailingAddress" >
+    update xhx_delivery_mailing_address
+    <set >
+        <if test="userId != null" >
+            userId = #{userId,jdbcType=BIGINT},
+        </if>
+      <if test="personName != null" >
+          personName = #{personName,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+          area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="detailedAdd != null" >
+          detailedAdd = #{detailedAdd,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null" >
+          zipCode = #{zipCode,jdbcType=VARCHAR},
+      </if>
+        <if test="iphone != null" >
+            iphone = #{iphone,jdbcType=VARCHAR},
+        </if>
+      <if test="defaultStatus != null" >
+          defaultStatus = #{defaultStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sang.bean.XhxDeliveryMailingAddress" >
+    update xhx_delivery_mailing_address
+    set userId = #{userId,jdbcType=BIGINT},
+      personName = #{personName,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      detailedAdd = #{detailedAdd,jdbcType=VARCHAR},
+      zipCode = #{zipCode,jdbcType=VARCHAR},
+      iphone = #{iphone,jdbcType=VARCHAR},
+      defaultStatus = #{defaultStatus,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="getAllDeps" resultMap="BaseResultMap">
+    select * from xhx_delivery_mailing_address
+  </select>
+  <select id="getModelByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from
+    xhx_delivery_mailing_address where userId = #{userId,jdbcType=BIGINT}
+  </select>
+  <insert id="addMailingAddress">
+    insert into xhx_delivery_mailing_address (id, userId, personName, area, detailedAdd, zipCode,iphone,defaultStatus,createTime, updateTime)
+    values (#{id,jdbcType=BIGINT},#{userId,jdbcType=BIGINT}, #{personName,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR},
+      #{detailedAdd,jdbcType=VARCHAR}, #{zipCode,jdbcType=VARCHAR},#{iphone,jdbcType=VARCHAR}, #{defaultStatus,jdbcType=INTEGER},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateSelective">
+    update xhx_delivery_mailing_address
+    <set >
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="personName != null" >
+        personName = #{personName,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="detailedAdd != null" >
+        detailedAdd = #{detailedAdd,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null" >
+        zipCode = #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="iphone != null" >
+        iphone = #{iphone,jdbcType=VARCHAR},
+      </if>
+      <if test="defaultStatus != null" >
+        defaultStatus = #{defaultStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

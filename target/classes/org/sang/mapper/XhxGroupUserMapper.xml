@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sang.mapper.XhxGroupUserMapper" >
+  <resultMap id="BaseResultMap" type="org.sang.bean.XhxGroupUser" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="mobilePhone" property="mobilePhone" jdbcType="VARCHAR" />
+    <result column="bindMobile" property="bindMobile" jdbcType="VARCHAR" />
+    <result column="lastLoginIp" property="lastLoginIp" jdbcType="VARCHAR" />
+    <result column="lastLoginTime" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="loginCount" property="loginCount" jdbcType="VARCHAR" />
+    <result column="profilePicture" property="profilePicture" jdbcType="VARCHAR" />
+    <result column="enable" property="enable" jdbcType="INTEGER" />
+    <result column="rechMoney" property="rechMoney" jdbcType="DOUBLE" />
+    <result column="giveMoney" property="giveMoney" jdbcType="DOUBLE" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="lazyLoadRoles" type="org.sang.bean.XhxGroupUser" extends="BaseResultMap">
+    <collection property="roles" ofType="org.sang.bean.XhxRole" select="org.sang.mapper.XhxUserMapper.getRolesByUserId"
+                column="id"></collection>
+  </resultMap>
+  <resultMap id="lazyLoadUserInfo" type="org.sang.bean.XhxGroupUser" extends="BaseResultMap">
+    <collection property="xhxUserinfo" ofType="org.sang.bean.XhxUserinfo" select="org.sang.mapper.XhxUserinfoMapper.findByUserId"
+                column="id"></collection>
+    <collection property="roles" ofType="org.sang.bean.XhxRole" select="org.sang.mapper.XhxUserMapper.getRolesByUserId"
+                column="id"></collection>
+  </resultMap>
+  <resultMap id="eagerLoadRoles" type="org.sang.bean.XhxGroupUser" extends="BaseResultMap">
+    <collection property="roles" ofType="org.sang.bean.XhxRole">
+      <id property="id" column="rid"/>
+      <result property="name" column="rname"/>
+      <result property="nameZh" column="rnamezh"/>
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, username, password, company, mobilePhone, bindMobile, lastLoginIp, lastLoginTime, 
+    loginCount, profilePicture, enable, createTime, updateTime
+  </sql>
+  <select id="findById" resultMap="lazyLoadUserInfo">
+    select * from xhx_group_user where id = #{id}
+  </select>
+  <select id="count" resultType="int">
+      select count(*) from xhx_group_user
+      <where>
+        1 = 1
+        <if test="username!=NULL and username != ''">
+          and username like "%"#{username}"%"
+        </if>
+        <if test="bindMobile!=NULL and bindMobile != ''">
+          and bindMobile like "%"#{bindMobile}"%"
+        </if>
+      </where>
+  </select>
+  <select id="findAll" resultType="org.sang.bean.XhxGroupUser">
+    select * from xhx_group_user
+    <where>
+      1 = 1
+      <if test="username!=NULL and username != ''">
+        and username like "%"#{username}"%"
+      </if>
+      <if test="bindMobile!=NULL and bindMobile != ''">
+        and bindMobile like "%"#{bindMobile}"%"
+      </if>
+    </where>
+    limit #{page},#{pageSize}
+  </select>
+  <select id="QueryByUsername" resultMap="lazyLoadRoles">
+    select * from xhx_group_user WHERE username=#{username};
+  </select>
+  <select id="getRolesByUserId" resultType="org.sang.bean.XhxRole">
+    SELECT r.* FROM xhx_re_user_role h,xhx_role r where h.roleId=r.id AND h.userId=#{id}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from xhx_group_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from xhx_group_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.sang.bean.XhxGroupUser" >
+    insert into xhx_group_user (id, username, password, 
+      company, mobilePhone, bindMobile, 
+      lastLoginIp, lastLoginTime, loginCount, 
+      profilePicture, enable,rechMoney,giveMoney, createTime,
+      updateTime)
+    values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{company,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{bindMobile,jdbcType=VARCHAR}, 
+      #{lastLoginIp,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{loginCount,jdbcType=VARCHAR}, 
+      #{profilePicture,jdbcType=VARCHAR}, #{enable,jdbcType=INTEGER},#{rechMoney,jdbcType=DOUBLE},#{giveMoney,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="org.sang.bean.XhxGroupUser" >
+    insert into xhx_group_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="mobilePhone != null" >
+        mobilePhone,
+      </if>
+      <if test="bindMobile != null" >
+        bindMobile,
+      </if>
+      <if test="lastLoginIp != null" >
+        lastLoginIp,
+      </if>
+      <if test="lastLoginTime != null" >
+        lastLoginTime,
+      </if>
+      <if test="loginCount != null" >
+        loginCount,
+      </if>
+      <if test="profilePicture != null" >
+        profilePicture,
+      </if>
+      <if test="enable != null" >
+        enable,
+      </if>
+      <if test="rechMoney != null" >
+        rechMoney,
+      </if>
+      <if test="giveMoney != null" >
+        giveMoney,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePhone != null" >
+        #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="bindMobile != null" >
+        #{bindMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginIp != null" >
+        #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null" >
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginCount != null" >
+        #{loginCount,jdbcType=VARCHAR},
+      </if>
+      <if test="profilePicture != null" >
+        #{profilePicture,jdbcType=VARCHAR},
+      </if>
+      <if test="enable != null" >
+        #{enable,jdbcType=INTEGER},
+      </if>
+      <if test="rechMoney != null" >
+        #{rechMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="giveMoney != null" >
+        #{giveMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sang.bean.XhxGroupUser" >
+    update xhx_group_user
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="mobilePhone != null" >
+        mobilePhone = #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="bindMobile != null" >
+        bindMobile = #{bindMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginIp != null" >
+        lastLoginIp = #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null" >
+        lastLoginTime = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginCount != null" >
+        loginCount = #{loginCount,jdbcType=VARCHAR},
+      </if>
+      <if test="profilePicture != null" >
+        profilePicture = #{profilePicture,jdbcType=VARCHAR},
+      </if>
+      <if test="enable != null" >
+        enable = #{enable,jdbcType=INTEGER},
+      </if>
+      <if test="rechMoney != null" >
+        #{rechMoney,jdbcType=DOUBLE}
+      </if>
+      <if test="giveMoney != null" >
+        #{giveMoney,jdbcType=DOUBLE}
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByusernameSelective" parameterType="org.sang.bean.XhxGroupUser" >
+    update xhx_group_user
+    <set >
+      <if test="lastLoginIp != null" >
+        lastLoginIp = #{lastLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null" >
+        lastLoginTime = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginCount != null" >
+        loginCount = #{loginCount,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where username = #{username}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sang.bean.XhxGroupUser" >
+    update xhx_group_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      company = #{company,jdbcType=VARCHAR},
+      mobilePhone = #{mobilePhone,jdbcType=VARCHAR},
+      bindMobile = #{bindMobile,jdbcType=VARCHAR},
+      lastLoginIp = #{lastLoginIp,jdbcType=VARCHAR},
+      lastLoginTime = #{lastLoginTime,jdbcType=TIMESTAMP},
+      loginCount = #{loginCount,jdbcType=VARCHAR},
+      profilePicture = #{profilePicture,jdbcType=VARCHAR},
+      enable = #{enable,jdbcType=INTEGER},
+      rechMoney =  #{rechMoney,jdbcType=DOUBLE}
+      giveMoney= #{giveMoney,jdbcType=DOUBLE}
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updatePassword" parameterType="org.sang.bean.XhxGroupUser" >
+    update xhx_group_user
+    set password = #{password,jdbcType=VARCHAR}
+    where username = #{username}
+  </update>
+
+  <select id="checkGroupUsername" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(*) from xhx_group_user where username = #{username}
+  </select>
+
+  <select id="checkMobile" resultType="int">
+    select count(*) from xhx_group_user
+    where 1=1
+    <if test="id != NULL">
+      and id = #{id}
+    </if>
+    <if test="username != NULL">
+      and username = #{username}
+    </if>
+    <if test="bindMobile != NULL">
+      and bindMobile = #{bindMobile}
+    </if>
+  </select>
+
+  <update id="updatePasswordByid" parameterType="org.sang.bean.XhxGroupUser" >
+    update xhx_group_user
+    <set >
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+</mapper>

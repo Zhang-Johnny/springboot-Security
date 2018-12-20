@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sang.mapper.XhxNewRiskTipMapper" >
+    <resultMap id="BaseResultMap" type="org.sang.bean.XhxNewRiskTip" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="userId" property="userId" jdbcType="BIGINT" />
+        <result column="riskTipDate" property="riskTipDate" jdbcType="TIMESTAMP" />
+        <result column="riskTipItem" property="riskTipItem" jdbcType="VARCHAR" />
+        <result column="companyName" property="companyName" jdbcType="VARCHAR" />
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+    id, userId, riskTipDate, riskTipItem, companyName,createTime, updateTime
+    </sql>
+
+    <select id="getNewRiskTipByUserId" resultType="org.sang.bean.XhxNewRiskTip">
+        select <include refid="Base_Column_List" /> from xhx_new_risk_tip
+        <where>
+            userId=#{userId,jdbcType=BIGINT}
+            <if test="startTime!=null and startTime!=''">
+                <![CDATA[   and DATE_FORMAT(riskTipDate, '%Y-%m-%d')>= DATE_FORMAT(#{startTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                <![CDATA[  and DATE_FORMAT(riskTipDate, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')    ]]>
+            </if>
+            <if test="companyName != null" >
+                and companyName = #{companyName,jdbcType=VARCHAR}
+            </if>
+            <if test="riskTipItem!=NULL and riskTipItem != ''">
+                and riskTipItem like "%"#{riskTipItem}"%"
+            </if>
+        </where>
+        order by riskTipDate DESC
+        limit #{page},#{pageSize}
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+    select count(*) from xhx_new_risk_tip
+    where userId=#{userId,jdbcType=BIGINT}
+  </select>
+</mapper>

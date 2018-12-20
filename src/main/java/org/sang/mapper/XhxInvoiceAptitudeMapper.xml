@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sang.mapper.XhxInvoiceAptitudeMapper" >
+  <resultMap id="BaseResultMap" type="org.sang.bean.XhxInvoiceAptitude" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="accountName" property="accountName" jdbcType="VARCHAR" />
+    <result column="taxNumber" property="taxNumber" jdbcType="INTEGER" />
+    <result column="context" property="context" jdbcType="VARCHAR" />
+    <result column="bank" property="bank" jdbcType="VARCHAR" />
+    <result column="bankNumber" property="bankNumber" jdbcType="VARCHAR" />
+    <result column="retinfoAdd" property="retinfoAdd" jdbcType="VARCHAR" />
+    <result column="mailingAdd" property="mailingAdd" jdbcType="VARCHAR" />
+    <result column="addressee" property="addressee" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, accountName, taxNumber, context, bank, bankNumber, retinfoAdd, mailingAdd, 
+    addressee, telephone, createTime, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from xhx_invoice_aptitude
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="findByNumber" resultType="org.sang.bean.XhxInvoiceAptitude">
+    select * from xhx_invoice_aptitude where taxNumber = #{taxNumber}
+  </select>
+  <select id="count" resultType="int">
+    select count(id) from xhx_invoice_aptitude
+    <where>
+      1 = 1
+      <if test="userIdList != NULL">
+        and userId in (${userIdList})
+      </if>
+      <if test="taxNumber != NULL and taxNumber != ''">
+        and taxNumber = #{taxNumber}
+      </if>
+    </where>
+  </select>
+  <select id="findAll" resultType="org.sang.bean.XhxInvoiceAptitude">
+      select * from xhx_invoice_aptitude
+    <where>
+      1 = 1
+      <if test="userIdList != NULL">
+        and userId in (${userIdList})
+      </if>
+      <if test="taxNumber != NULL and taxNumber != ''">
+        and taxNumber = #{taxNumber}
+      </if>
+    </where>
+      limit #{page},#{pageSize}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from xhx_invoice_aptitude
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.sang.bean.XhxInvoiceAptitude" >
+    insert into xhx_invoice_aptitude (id, userId, accountName, 
+      taxNumber, context, bank, 
+      bankNumber, retinfoAdd, mailingAdd, 
+      addressee, telephone, createTime, 
+      updateTime)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{accountName,jdbcType=VARCHAR}, 
+      #{taxNumber,jdbcType=INTEGER}, #{context,jdbcType=VARCHAR}, #{bank,jdbcType=VARCHAR}, 
+      #{bankNumber,jdbcType=VARCHAR}, #{retinfoAdd,jdbcType=VARCHAR}, #{mailingAdd,jdbcType=VARCHAR}, 
+      #{addressee,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="org.sang.bean.XhxInvoiceAptitude" >
+    insert into xhx_invoice_aptitude
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="accountName != null" >
+        accountName,
+      </if>
+      <if test="taxNumber != null" >
+        taxNumber,
+      </if>
+      <if test="context != null" >
+        context,
+      </if>
+      <if test="bank != null" >
+        bank,
+      </if>
+      <if test="bankNumber != null" >
+        bankNumber,
+      </if>
+      <if test="retinfoAdd != null" >
+        retinfoAdd,
+      </if>
+      <if test="mailingAdd != null" >
+        mailingAdd,
+      </if>
+      <if test="addressee != null" >
+        addressee,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="accountName != null" >
+        #{accountName,jdbcType=VARCHAR},
+      </if>
+      <if test="taxNumber != null" >
+        #{taxNumber,jdbcType=INTEGER},
+      </if>
+      <if test="context != null" >
+        #{context,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null" >
+        #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNumber != null" >
+        #{bankNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="retinfoAdd != null" >
+        #{retinfoAdd,jdbcType=VARCHAR},
+      </if>
+      <if test="mailingAdd != null" >
+        #{mailingAdd,jdbcType=VARCHAR},
+      </if>
+      <if test="addressee != null" >
+        #{addressee,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sang.bean.XhxInvoiceAptitude" >
+    update xhx_invoice_aptitude
+    <set >
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="accountName != null" >
+        accountName = #{accountName,jdbcType=VARCHAR},
+      </if>
+      <if test="taxNumber != null" >
+        taxNumber = #{taxNumber,jdbcType=INTEGER},
+      </if>
+      <if test="context != null" >
+        context = #{context,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null" >
+        bank = #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="bankNumber != null" >
+        bankNumber = #{bankNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="retinfoAdd != null" >
+        retinfoAdd = #{retinfoAdd,jdbcType=VARCHAR},
+      </if>
+      <if test="mailingAdd != null" >
+        mailingAdd = #{mailingAdd,jdbcType=VARCHAR},
+      </if>
+      <if test="addressee != null" >
+        addressee = #{addressee,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sang.bean.XhxInvoiceAptitude" >
+    update xhx_invoice_aptitude
+    set userId = #{userId,jdbcType=INTEGER},
+      accountName = #{accountName,jdbcType=VARCHAR},
+      taxNumber = #{taxNumber,jdbcType=INTEGER},
+      context = #{context,jdbcType=VARCHAR},
+      bank = #{bank,jdbcType=VARCHAR},
+      bankNumber = #{bankNumber,jdbcType=VARCHAR},
+      retinfoAdd = #{retinfoAdd,jdbcType=VARCHAR},
+      mailingAdd = #{mailingAdd,jdbcType=VARCHAR},
+      addressee = #{addressee,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <!--根据userid查找用户的发票抬头accountName/taxNumber/bank/bankNumber-->
+  <select id="getInvoiceAptitudeByUserId" resultType="org.sang.bean.XhxInvoiceAptitude">
+    select
+    *
+    from xhx_invoice_aptitude
+    where userId = #{userId}
+  </select>
+
+</mapper>

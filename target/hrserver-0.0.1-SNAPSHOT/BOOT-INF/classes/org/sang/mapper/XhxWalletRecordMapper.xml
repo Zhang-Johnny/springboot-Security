@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sang.mapper.XhxWalletRecordMapper" >
+  <resultMap id="BaseResultMap" type="org.sang.bean.XhxWalletRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="userId" property="userId" jdbcType="BIGINT" />
+    <result column="balance" property="balance" jdbcType="DOUBLE" />
+    <result column="giveMoney" property="giveMoney" jdbcType="DOUBLE" />
+    <result column="rechMoney" property="rechMoney" jdbcType="DOUBLE" />
+    <result column="consume" property="consume" jdbcType="DOUBLE" />
+    <result column="isavailable" property="isavailable" jdbcType="INTEGER" />
+    <result column="invoiceStatus" property="invoiceStatus" jdbcType="INTEGER" />
+    <result column="operateUser" property="operateUser" jdbcType="VARCHAR" />
+    <result column="consume_projects" property="consume_projects" jdbcType="VARCHAR" />
+    <result column="recordNo" property="recordNo" jdbcType="BIGINT" />
+    <result column="paymentType" property="paymentType" jdbcType="INTEGER" />
+    <result column="flowNumber" property="flowNumber" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, balance, giveMoney, rechMoney, consume,isavailable,invoiceStatus,operateUser,consume_projects,recordNo,paymentType,flowNumber,createTime, updateTime
+  </sql>
+  <select id="count" resultType="int">
+    select  count(*) from xhx_wallet_record
+    <where>
+      1 = 1
+      <if test="consume_projects!=NULL and consume_projects != ''">
+        and consume_projects like "%"#{consume_projects}"%"
+      </if>
+      <if test="invoiceStatus!=NULL and invoiceStatus != ''">
+        and invoiceStatus = #{invoiceStatus}
+      </if>
+      <if test="operateUser!=NULL and operateUser != ''">
+        and operateUser like "%"#{operateUser}"%"
+      </if>
+      <if test="userIdList!=NULL and  userIdList!= ''">
+        and  userId in (${userIdList})
+      </if>
+      <if test="userId!=NULL and  userId!= ''">
+        and  userId = #{userId}
+      </if>
+      <if test="createTime!=NULL and  createTime!= ''">
+        and  createTime = #{createTime}
+      </if>
+      <if test="updateTime!=NULL and  updateTime!= ''">
+        and  updateTime = #{updateTime}
+      </if>
+    </where>
+  </select>
+  <select id="findAll" resultType="org.sang.bean.XhxWalletRecord">
+    select  * from xhx_wallet_record
+    <where>
+      1 = 1
+      <if test="consume_projects!=NULL and consume_projects != ''">
+        and consume_projects like "%"#{consume_projects}"%"
+      </if>
+      <if test="invoiceStatus!=NULL and invoiceStatus != ''">
+        and invoiceStatus = #{invoiceStatus}
+      </if>
+      <if test="operateUser!=NULL and operateUser != ''">
+        and operateUser like "%"#{operateUser}"%"
+      </if>
+    </where>
+    limit #{page},#{pageSize}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from xhx_wallet_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from xhx_wallet_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.sang.bean.XhxWalletRecord" >
+    insert into xhx_wallet_record (id, userId, balance, 
+      giveMoney, rechMoney, consume,isavailable,invoiceStatus,
+      operateUser,consume_projects,recordNo,paymentType,flowNumber, createTime, updateTime
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{balance,jdbcType=DOUBLE}, 
+      #{giveMoney,jdbcType=DOUBLE}, #{rechMoney,jdbcType=DOUBLE}, #{consume,jdbcType=DOUBLE},
+      #{isavailable,jdbcType=INTEGER},#{invoiceStatus,jdbcType=INTEGER},#{operateUser,jdbcType=VARCHAR},
+      #{consume_projects,jdbcType=VARCHAR}, #{recordNo,jdbcType=BIGINT}, #{paymentType,jdbcType=INTEGER}, #{flowNumber,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.sang.bean.XhxWalletRecord" >
+    insert into xhx_wallet_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="giveMoney != null" >
+        giveMoney,
+      </if>
+      <if test="rechMoney != null" >
+        rechMoney,
+      </if>
+      <if test="isavailable != null" >
+        isavailable,
+      </if>
+      <if test="invoiceStatus != null" >
+        invoiceStatus,
+      </if>
+      <if test="consume != null" >
+        consume,
+      </if>
+      <if test="operateUser != null" >
+        operateUser,
+      </if>
+      <if test="consume_projects != null" >
+        consume_projects,
+      </if>
+      <if test="recordNo != null" >
+        recordNo,
+      </if>
+      <if test="paymentType != null" >
+        paymentType,
+      </if>
+      <if test="flowNumber != null" >
+        flowNumber,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DOUBLE},
+      </if>
+      <if test="giveMoney != null" >
+        #{giveMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="rechMoney != null" >
+        #{rechMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="isavailable != null" >
+        #{isavailable,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceStatus != null" >
+        #{invoiceStatus,jdbcType=INTEGER},
+      </if>
+      <if test="consume != null" >
+        #{consume,jdbcType=DOUBLE},
+      </if>
+      <if test="operateUser != null" >
+        #{operateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="consume_projects != null" >
+        #{consume_projects,jdbcType=VARCHAR},
+      </if>
+      <if test="recordNo != null" >
+        #{recordNo,jdbcType=BIGINT},
+      </if>
+      <if test="paymentType != null" >
+        #{paymentType,jdbcType=INTEGER},
+      </if>
+      <if test="flowNumber != null" >
+        #{flowNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sang.bean.XhxWalletRecord" >
+    update xhx_wallet_record
+    <set >
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DOUBLE},
+      </if>
+      <if test="giveMoney != null" >
+        giveMoney = #{giveMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="rechMoney != null" >
+        rechMoney = #{rechMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="consume != null" >
+        consume = #{consume,jdbcType=DOUBLE},
+      </if>
+      <if test="isavailable != null" >
+        #{isavailable,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceStatus != null" >
+        #{invoiceStatus,jdbcType=INTEGER},
+      </if>
+      <if test="operateUser != null" >
+        operateUser = #{operateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="consume_projects != null" >
+        consume_projects=#{consume_projects,jdbcType=VARCHAR},
+      </if>
+      <if test="recordNo != null" >
+        recordNo=#{recordNo,jdbcType=BIGINT},
+      </if>
+      <if test="paymentType != null" >
+        paymentType=#{paymentType,jdbcType=INTEGER},
+      </if>
+      <if test="flowNumber != null" >
+        flowNumber=#{flowNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sang.bean.XhxWalletRecord" >
+    update xhx_wallet_record
+    set userId = #{userId,jdbcType=BIGINT},
+      balance = #{balance,jdbcType=DOUBLE},
+      giveMoney = #{giveMoney,jdbcType=DOUBLE},
+      rechMoney = #{rechMoney,jdbcType=DOUBLE},
+      consume = #{consume,jdbcType=DOUBLE},
+      isavailable =  #{isavailable,jdbcType=INTEGER},
+      invoiceStatus = #{invoiceStatus,jdbcType=INTEGER},
+      operateUser = #{operateUser,jdbcType=VARCHAR},
+      consume_projects=#{consume_projects,jdbcType=VARCHAR},
+      recordNo=#{recordNo,jdbcType=BIGINT},
+      paymentType=#{paymentType,jdbcType=INTEGER},
+      flowNumber=#{flowNumber,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByUserIdList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from xhx_wallet_record
+    where 1=1
+    <if test="parentId != NULL">
+      and userId in (${userIdList})
+    </if>
+    <if test="userId != NULL">
+      and userId = #{userId}
+    </if>
+    <if test="operateUser!=NULL and operateUser != ''">
+      and operateUser like "%"#{operateUser}"%"
+    </if>
+    <if test="createTime!=NULL and  createTime!= ''">
+      and  createTime = #{createTime}
+    </if>
+    <if test="updateTime!=NULL and  updateTime!= ''">
+      and  updateTime = #{updateTime}
+    </if>
+    <if test="invoiceStatus!=NULL and invoiceStatus != ''">
+      and invoiceStatus = #{invoiceStatus}
+    </if>
+    limit #{page},#{pageSize}
+  </select>
+</mapper>

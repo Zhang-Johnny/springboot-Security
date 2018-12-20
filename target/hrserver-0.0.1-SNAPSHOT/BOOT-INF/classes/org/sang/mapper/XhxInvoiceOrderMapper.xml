@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sang.mapper.XhxInvoiceOrderMapper" >
+  <resultMap id="BaseResultMap" type="org.sang.bean.XhxInvoiceOrder" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="userId" property="userId" jdbcType="BIGINT" />
+    <result column="invoiceno" property="invoiceno" jdbcType="VARCHAR" />
+    <result column="invoiceHeader" property="invoiceHeader" jdbcType="VARCHAR" />
+    <result column="taxNumber" property="taxNumber" jdbcType="INTEGER" />
+    <result column="invoiceType" property="invoiceType" jdbcType="INTEGER" />
+    <result column="invoiceNature" property="invoiceNature" jdbcType="INTEGER" />
+    <result column="orderAmount" property="orderAmount" jdbcType="DOUBLE" />
+    <result column="orderStatus" property="orderStatus" jdbcType="INTEGER" />
+    <result column="context" property="context" jdbcType="VARCHAR" />
+    <result column="deliveryType" property="deliveryType" jdbcType="INTEGER" />
+    <result column="mailingAdd" property="mailingAdd" jdbcType="VARCHAR" />
+    <result column="addressee" property="addressee" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="remark" property="telephone" jdbcType="VARCHAR" />
+    <result column="expressRemark" property="telephone" jdbcType="VARCHAR" />
+    <result column="orderTime" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="lazyLoadUser" type="org.sang.bean.XhxInvoiceOrder" extends="BaseResultMap">
+    <collection property="XhxUser" ofType="org.sang.bean.XhxUser" select="org.sang.mapper.XhxUserMapper.selectByPrimaryKey"
+                column="id">
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId ,invoiceno, invoiceHeader, taxNumber,  invoiceType,
+    invoiceNature, orderAmount, orderStatus, context, deliveryType, mailingAdd,
+    addressee, telephone, orderTime, createTime, updateTime,remark,expressRemark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from xhx_invoice_order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="count" resultType="int">
+     select count(id) from xhx_invoice_order
+    <where>
+      1 = 1
+      <if test="invoiceType != NULL and invoiceType != ''">
+        and invoiceType = #{invoiceType}
+      </if>
+      <if test="invoiceNature!=NULL and invoiceNature != ''">
+        and invoiceNature = #{invoiceNature}
+      </if>
+      <if test="orderStatus!=NULL and orderStatus != ''">
+        and orderStatus = #{orderStatus}
+      </if>
+      <if test="userIdList != NULL">
+        and userId in (${userIdList})
+      </if>
+     </where>
+  </select>
+  <select id="findAll" resultMap="lazyLoadUser">
+    select * from xhx_invoice_order
+    <where>
+      1 = 1
+      <if test="userId!=NULL and userId != ''">
+        and userId = #{userId}
+      </if>
+      <if test="invoiceType!=NULL and invoiceType != ''">
+        and invoiceType = #{invoiceType}
+      </if>
+      <if test="invoiceNature!=NULL and invoiceNature != ''">
+        and invoiceNature = #{invoiceNature}
+      </if>
+      <if test="orderStatus!=NULL and orderStatus != ''">
+        and orderStatus = #{orderStatus}
+      </if>
+    </where>
+    limit #{page},#{pageSize}
+  </select>
+  <select id="selectByInvoiceNo" resultMap="lazyLoadUser">
+    select * from xhx_invoice_order where invoiceno = #{invoiceNo}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from xhx_invoice_order
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.sang.bean.XhxInvoiceOrder" >
+    insert into xhx_invoice_order (id, userId,
+      invoiceno, invoiceHeader, taxNumber, 
+       invoiceType, invoiceNature,
+      orderAmount, orderStatus,
+      context, deliveryType, mailingAdd, 
+      addressee, telephone, orderTime, 
+      createTime, updateTime,remark,expressRemark)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT},
+      #{invoiceno,jdbcType=VARCHAR}, #{invoiceHeader,jdbcType=VARCHAR}, #{taxNumber,jdbcType=INTEGER}, 
+       #{invoiceType,jdbcType=INTEGER}, #{invoiceNature,jdbcType=INTEGER},
+      #{orderAmount,jdbcType=DOUBLE}, #{orderStatus,jdbcType=INTEGER},
+      #{context,jdbcType=VARCHAR}, #{deliveryType,jdbcType=INTEGER}, #{mailingAdd,jdbcType=VARCHAR}, 
+      #{addressee,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{orderTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{expressRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.sang.bean.XhxInvoiceOrder" >
+    insert into xhx_invoice_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="invoiceno != null" >
+        invoiceno,
+      </if>
+      <if test="invoiceHeader != null" >
+        invoiceHeader,
+      </if>
+      <if test="taxNumber != null" >
+        taxNumber,
+      </if>
+
+      <if test="invoiceType != null" >
+        invoiceType,
+      </if>
+      <if test="invoiceNature != null" >
+        invoiceNature,
+      </if>
+      <if test="orderAmount != null" >
+        orderAmount,
+      </if>
+      <if test="orderStatus != null" >
+        orderStatus,
+      </if>
+      <if test="context != null" >
+        context,
+      </if>
+      <if test="deliveryType != null" >
+        deliveryType,
+      </if>
+      <if test="mailingAdd != null" >
+        mailingAdd,
+      </if>
+      <if test="addressee != null" >
+        addressee,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="orderTime != null" >
+        orderTime,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="expressRemark != null" >
+        expressRemark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="invoiceno != null" >
+        #{invoiceno,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceHeader != null" >
+        #{invoiceHeader,jdbcType=VARCHAR},
+      </if>
+      <if test="taxNumber != null" >
+        #{taxNumber,jdbcType=INTEGER},
+      </if>
+
+      <if test="invoiceType != null" >
+        #{invoiceType,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceNature != null" >
+        #{invoiceNature,jdbcType=INTEGER},
+      </if>
+      <if test="orderAmount != null" >
+        #{orderAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="context != null" >
+        #{context,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryType != null" >
+        #{deliveryType,jdbcType=INTEGER},
+      </if>
+      <if test="mailingAdd != null" >
+        #{mailingAdd,jdbcType=VARCHAR},
+      </if>
+      <if test="addressee != null" >
+        #{addressee,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTime != null" >
+        #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="expressRemark != null" >
+        #{expressRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sang.bean.XhxInvoiceOrder" >
+    update xhx_invoice_order
+    <set >
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="invoiceno != null" >
+        invoiceno = #{invoiceno,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceHeader != null" >
+        invoiceHeader = #{invoiceHeader,jdbcType=VARCHAR},
+      </if>
+      <if test="taxNumber != null" >
+        taxNumber = #{taxNumber,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceType != null" >
+        invoiceType = #{invoiceType,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceNature != null" >
+        invoiceNature = #{invoiceNature,jdbcType=INTEGER},
+      </if>
+      <if test="orderAmount != null" >
+        orderAmount = #{orderAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="orderStatus != null" >
+        orderStatus = #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="context != null" >
+        context = #{context,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryType != null" >
+        deliveryType = #{deliveryType,jdbcType=INTEGER},
+      </if>
+      <if test="mailingAdd != null" >
+        mailingAdd = #{mailingAdd,jdbcType=VARCHAR},
+      </if>
+      <if test="addressee != null" >
+        addressee = #{addressee,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTime != null" >
+        orderTime = #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="expressRemark != null" >
+        #{expressRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sang.bean.XhxInvoiceOrder" >
+    update xhx_invoice_order
+    set userId = #{userId,jdbcType=BIGINT},
+      invoiceno = #{invoiceno,jdbcType=VARCHAR},
+      invoiceHeader = #{invoiceHeader,jdbcType=VARCHAR},
+      taxNumber = #{taxNumber,jdbcType=INTEGER},
+      invoiceType = #{invoiceType,jdbcType=INTEGER},
+      invoiceNature = #{invoiceNature,jdbcType=INTEGER},
+      orderAmount = #{orderAmount,jdbcType=DOUBLE},
+      orderStatus = #{orderStatus,jdbcType=INTEGER},
+      context = #{context,jdbcType=VARCHAR},
+      deliveryType = #{deliveryType,jdbcType=INTEGER},
+      mailingAdd = #{mailingAdd,jdbcType=VARCHAR},
+      addressee = #{addressee,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      orderTime = #{orderTime,jdbcType=TIMESTAMP},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP}
+      remark = #{remark,jdbcType=VARCHAR},
+      expressRemark = #{expressRemark,jdbcType=VARCHAR},
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectAllInvoiceOrder" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from xhx_invoice_order
+    where 1=1
+    <if test="userIdList != NULL">
+      and userId in (${userIdList})
+    </if>
+    limit #{page},#{pageSize}
+  </select>
+</mapper>

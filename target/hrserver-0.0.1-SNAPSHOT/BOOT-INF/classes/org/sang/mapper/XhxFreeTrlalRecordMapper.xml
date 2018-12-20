@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sang.mapper.XhxFreeTrlalRecordMapper" >
+  <resultMap id="BaseResultMap" type="org.sang.bean.XhxFreeTrlalRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="userId" property="userId" jdbcType="BIGINT" />
+    <result column="trialType" property="trialType" jdbcType="INTEGER" />
+    <result column="trialDate" property="trialDate" jdbcType="VARCHAR" />
+    <result column="startTime" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="endTime" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="lazyLoadUser1" type="org.sang.bean.XhxFreeTrlalRecord" extends="BaseResultMap">
+    <collection property="xhxUser" ofType="org.sang.bean.XhxUser" select="org.sang.mapper.XhxUserMapper.selectByPrimaryKey"
+                column="id">
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, trialType, trialDate, startTime, endTime, createTime, updateTime
+  </sql>
+  <select id="count" resultType="int">
+    select count(*) from xhx_free_trlal_record
+    <where>
+      1 = 1
+      <if test="id!=NULL and id != ''">
+        and userId in (${id})
+      </if>
+      <if test="trialType!=NULL and trialType != ''">
+        and trialType = #{trialType}
+      </if>
+    </where>
+  </select>
+  <select id="findAll" resultMap="lazyLoadUser1">
+    select
+    <include refid="Base_Column_List" />
+    from xhx_free_trlal_record
+    <where>
+      1 = 1
+      <if test="id!=NULL and id != ''">
+        and userId in (${id})
+      </if>
+      <if test="trialType!=NULL and trialType != ''">
+        and trialType = #{trialType}
+      </if>
+    </where>
+    limit #{page},#{pageSize}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from xhx_free_trlal_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from xhx_free_trlal_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.sang.bean.XhxFreeTrlalRecord" >
+    insert into xhx_free_trlal_record (id, userId, trialType, 
+      trialDate, startTime, endTime, 
+      createTime, updateTime)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{trialType,jdbcType=INTEGER}, 
+      #{trialDate,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="org.sang.bean.XhxFreeTrlalRecord" >
+    insert into xhx_free_trlal_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="trialType != null" >
+        trialType,
+      </if>
+      <if test="trialDate != null" >
+        trialDate,
+      </if>
+      <if test="startTime != null" >
+        startTime,
+      </if>
+      <if test="endTime != null" >
+        endTime,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="trialType != null" >
+        #{trialType,jdbcType=INTEGER},
+      </if>
+      <if test="trialDate != null" >
+        #{trialDate,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sang.bean.XhxFreeTrlalRecord" >
+    update xhx_free_trlal_record
+    <set >
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="trialType != null" >
+        trialType = #{trialType,jdbcType=INTEGER},
+      </if>
+      <if test="trialDate != null" >
+        trialDate = #{trialDate,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        startTime = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        endTime = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sang.bean.XhxFreeTrlalRecord" >
+    update xhx_free_trlal_record
+    set userId = #{userId,jdbcType=BIGINT},
+      trialType = #{trialType,jdbcType=INTEGER},
+      trialDate = #{trialDate,jdbcType=VARCHAR},
+      startTime = #{startTime,jdbcType=TIMESTAMP},
+      endTime = #{endTime,jdbcType=TIMESTAMP},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="findAllByParam" resultMap="lazyLoadUser1">
+    select tr.* from xhx_free_trlal_record tr inner join xhx_user u on u.id=tr.userId
+    <where>
+      1 = 1
+      <if test="username!=NULL and username != ''">
+        and u.username like "%"#{username}"%"
+      </if>
+      <if test="trialType!=NULL and trialType != ''">
+        and tr.trialType = #{trialType}
+      </if>
+    </where>
+    limit #{page},#{pageSize}
+  </select>
+  <select id="countNo" resultType="int">
+    select count(tr.id) from xhx_free_trlal_record tr inner join xhx_user u on u.id=tr.userId
+    <where>
+      1 = 1
+      <if test="username!=NULL and username != ''">
+        and u.username like "%"#{username}"%"
+      </if>
+      <if test="trialType!=NULL and trialType != ''">
+        and tr.trialType = #{trialType}
+      </if>
+    </where>
+  </select>
+</mapper>

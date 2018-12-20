@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sang.mapper.XhxRiskMonitorMapper" >
+  <resultMap id="BaseResultMap" type="org.sang.bean.XhxRiskMonitor" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="menuName" property="menuName" jdbcType="VARCHAR" />
+    <result column="monitorPrice" property="monitorPrice" jdbcType="DOUBLE" />
+    <result column="discount" property="discount" jdbcType="DOUBLE" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, menuName, monitorPrice, discount, createTime, updateTime
+  </sql>
+  <select id="count" resultType="int">
+    select count(id) from xhx_risk_monitor
+    <where>
+      1 = 1
+      <if test="menuName!=NULL and menuName != ''">
+        and menuName like "%"#{menuName}"%"
+      </if>
+    </where>
+  </select>
+  <select id="findAll" resultType="org.sang.bean.XhxRiskMonitor">
+    select * from xhx_risk_monitor
+    <where>
+      1 = 1
+      <if test="menuName!=NULL and menuName != ''">
+        and menuName like "%"#{menuName}"%"
+      </if>
+    </where>
+    limit #{page},#{pageSize}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from xhx_risk_monitor
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from xhx_risk_monitor
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.sang.bean.XhxRiskMonitor" >
+    insert into xhx_risk_monitor (id, menuName, monitorPrice, 
+      discount, createTime, updateTime
+      )
+    values (#{id,jdbcType=BIGINT}, #{menuName,jdbcType=VARCHAR}, #{monitorPrice,jdbcType=DOUBLE}, 
+      #{discount,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.sang.bean.XhxRiskMonitor" >
+    insert into xhx_risk_monitor
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="menuName != null" >
+        menuName,
+      </if>
+      <if test="monitorPrice != null" >
+        monitorPrice,
+      </if>
+      <if test="discount != null" >
+        discount,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="menuName != null" >
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorPrice != null" >
+        #{monitorPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sang.bean.XhxRiskMonitor" >
+    update xhx_risk_monitor
+    <set >
+      <if test="menuName != null" >
+        menuName = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorPrice != null" >
+        monitorPrice = #{monitorPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="discount != null" >
+        discount = #{discount,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sang.bean.XhxRiskMonitor" >
+    update xhx_risk_monitor
+    set menuName = #{menuName,jdbcType=VARCHAR},
+      monitorPrice = #{monitorPrice,jdbcType=DOUBLE},
+      discount = #{discount,jdbcType=DOUBLE},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
